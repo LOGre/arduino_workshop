@@ -2,8 +2,13 @@
 // des fonctions décrites ailleurs
 #include <Arduino.h>
 
-/*
 #define BUTTON PC13
+
+volatile bool button_pushed = false;
+
+void button_pushed_isr() {
+  button_pushed = true;
+}
 
 void setup() {
   Serial.begin(115200);
@@ -12,18 +17,16 @@ void setup() {
   // Généralement pour déclarer les I/O
   pinMode(D13, OUTPUT);
   pinMode(BUTTON, INPUT);
+  attachInterrupt(BUTTON, button_pushed_isr, FALLING);
 }
 
 void loop() {
   // Déclare et initialise des variables
-  bool button_state = false;
+  
   while(1) {
-    button_state = digitalRead(BUTTON);
-    if (button_state == true) {
-      digitalWrite(D13, false);
-    } else {
-      digitalWrite(D13, true);
+    if (button_pushed == true) {
+      button_pushed = false;
+      digitalToggle(D13);
     }
   }
 }
-*/
